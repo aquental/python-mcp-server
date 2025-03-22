@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "weather": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/Users/aquental/projects/mcp/python-mcp-server",
+                "run",
+                "weather.py"
+            ]
+        }
+    }
+}
