@@ -3,6 +3,9 @@ name = "python-mcp-server"
 version = "0.1.0"
 description = "A simple MCP server to query DeFi data"
 readme = "README.md"
+authors = [
+    { name = "Aquental", email = "antonio.quental@gmail.com" },
+]
 requires-python = ">=3.12.6"
 dependencies = [
     "httpx>=0.28.1",
