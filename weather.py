@@ -16,13 +16,20 @@ async def make_nws_request(url: str) -> dict[str, Any] | None:
         "User-Agent": USER_AGENT,
         "Accept": "application/geo+json"
     }
-    async with httpx.AsyncClient() as client:
-        try:
+    try:
+        async with httpx.AsyncClient() as client:
             response = await client.get(url, headers=headers, timeout=30.0)
-            response.raise_for_status()
-            return response.json()
-        except Exception:
-            return None
+            await response.raise_for_status()
+            return await response.json()
+    except httpx.HTTPStatusError as e:
+        print(f"HTTP error occurred: {e.response.status_code} for {url}")
+        return None
+    except httpx.RequestError as e:
+        print(f"Request error occurred: {e} for {url}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error occurred: {e}")
+        return None
 
 
 def format_alert(feature: dict) -> str:
