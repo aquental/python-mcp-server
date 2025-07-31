@@ -35,5 +35,8 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["tests"]
 
+[tool.uv.workspace]
+members = ["projects/MCPServer-FastAPI-ASGI_App"]
+
 [project.scripts]
 weather-server = "weather:mcp.run"
