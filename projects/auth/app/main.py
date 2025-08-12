@@ -1,14 +1,14 @@
 import uvicorn
 from fastapi import FastAPI
 from starlette.middleware import Middleware
-from shopping_list import ShoppingListService
-from mcp_server import mcp
 from auth import ApiKeyMiddleware
+from shopping_list import ShoppingListService
+from mcp_server import mcp  # Import the MCP server with tools
 
-
-# Create the FastAPI app and add ApiKeyMiddleware as middleware
-app = FastAPI()
-app.add_middleware(ApiKeyMiddleware)
+# Create the FastAPI app and add middleware
+app = FastAPI(
+    middleware=[Middleware(ApiKeyMiddleware)]
+)
 
 # Create a shopping list service instance
 shopping_list = ShoppingListService()

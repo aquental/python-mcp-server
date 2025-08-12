@@ -7,9 +7,7 @@ async def main():
     # Setup the SSE server parameters with the API key
     server_params = {
         "url": "http://localhost:3000/mcp/sse",
-        "headers": {
-            "X-API-Key": "super_secret_value"
-        }
+        "headers": {"X-API-Key": "super_secret_value"},
     }
 
     # Connect to the MCP server over SSE
