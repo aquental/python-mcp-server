@@ -71,6 +71,27 @@ def build_chroma_collection(chunks, collection_name="rag_collection"):
     return collection
 
 
+def delete_documents_with_keyword(collection, keyword):
+    """
+    Deletes all documents from the given ChromaDB 'collection' whose text contains 'keyword'.
+    """
+    # Get all documents and their IDs from the collection
+    results = collection.get()
+    ids = results["ids"]
+    documents = results["documents"]
+
+    # Create a list to store IDs of documents containing the keyword
+    ids_to_delete = []
+
+    # Iterate through documents and their IDs, adding matching document IDs to the list
+    for doc_id, doc_text in zip(ids, documents):
+        if keyword.lower() in doc_text.lower():
+            ids_to_delete.append(doc_id)
+
+    # If there are documents to delete, remove them from the collection
+    if ids_to_delete:
+        collection.delete(ids=ids_to_delete)
+
 if __name__ == "__main__":
     current_dir = os.path.dirname(__file__)
     dataset_file = os.path.join(current_dir, "data", "corpus.json")
@@ -111,6 +132,13 @@ if __name__ == "__main__":
 
     # Remove the newly added document using collection.delete()
     collection.delete(ids=[new_doc_id])
+
+    # Print the final document count
+    final_count = collection.count()
+    print("Final document count after deletion:", final_count)
+
+    # Now delete all documents containing the keyword "Bananas".
+    delete_documents_with_keyword(collection, "Bananas")
 
     # Print the final document count
     final_count = collection.count()
