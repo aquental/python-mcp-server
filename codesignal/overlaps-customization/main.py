@@ -12,17 +12,10 @@ def are_chunks_overlapping(chunks, similarity_threshold=0.8):
     if len(chunks) < 2:
         return False
 
-    # Create a list of sets where each set contains the words from a chunk
-    # Hint: Use list comprehension with split() to get words and convert to set
-    text_sets = [set(chunk["text"].split()) for chunk in chunks]
-
-    # Compare each pair of chunks
+    text_sets = [set(c["text"].split()) for c in chunks]
     for i in range(len(text_sets) - 1):
         for j in range(i + 1, len(text_sets)):
-            # Calculate the overlap ratio between chunks i and j
-            # Hint: Use set intersection and divide by the larger set's size
-            overlap = len(text_sets[i].intersection(text_sets[j])) / len(text_sets[i])
-
+            overlap = len(text_sets[i].intersection(text_sets[j])) / max(len(text_sets[i]), 1)
             if overlap > similarity_threshold:
                 return True
     return False
@@ -46,6 +39,7 @@ def summarize_chunks(chunks):
 
     summary = get_llm_response(prompt).strip()
 
+    # === CORRECTED CHECK ===
     if len(summary) < 20 or "Summary not possible" in summary:
         print("Summary was too short or not possible. Providing full chunks instead.")
         return combined_text
