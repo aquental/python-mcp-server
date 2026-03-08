@@ -2,6 +2,7 @@ from data import load_and_chunk_corpus
 from vector_db import build_chroma_collection
 from scripts.llm import get_llm_response
 
+
 def are_chunks_overlapping(chunks, similarity_threshold=0.8):
     """
     Basic check for overlapping or highly similar chunk texts.
@@ -15,10 +16,12 @@ def are_chunks_overlapping(chunks, similarity_threshold=0.8):
     text_sets = [set(c["text"].split()) for c in chunks]
     for i in range(len(text_sets) - 1):
         for j in range(i + 1, len(text_sets)):
-            overlap = len(text_sets[i].intersection(text_sets[j])) / max(len(text_sets[i]), 1)
+            overlap = len(text_sets[i].intersection(
+                text_sets[j])) / max(len(text_sets[i]), 1)
             if overlap > similarity_threshold:
                 return True
     return False
+
 
 def summarize_chunks(chunks):
     """
@@ -39,12 +42,12 @@ def summarize_chunks(chunks):
 
     summary = get_llm_response(prompt).strip()
 
-    # === CORRECTED CHECK ===
     if len(summary) < 20 or "Summary not possible" in summary:
         print("Summary was too short or not possible. Providing full chunks instead.")
         return combined_text
 
     return summary
+
 
 def final_generation(query, context):
     """
@@ -61,9 +64,11 @@ def final_generation(query, context):
     )
     return get_llm_response(prompt)
 
+
 if __name__ == "__main__":
     chunked_docs = load_and_chunk_corpus("data/corpus.json", chunk_size=40)
-    collection = build_chroma_collection(chunked_docs, "summary_demo_collection")
+    collection = build_chroma_collection(
+        chunked_docs, "summary_demo_collection")
 
     user_query = "Provide an overview of our internal policies."
     retrieval_results = collection.query(query_texts=[user_query], n_results=5)
@@ -82,6 +87,7 @@ if __name__ == "__main__":
         else:
             context = "\n".join(f"- {c['text']}" for c in retrieved_chunks)
 
+        # ←←← Fixed: now calls the properly implemented function ←←←
         final_answer = final_generation(user_query, context)
 
     print(f"Final answer:\n{final_answer}")
